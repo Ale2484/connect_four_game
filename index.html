@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="js/app.js" defer></script>
   <title>Connect 4 game</title>
 </head>
 <body class="bg-[#7A45FF] p-10 flex flex-col items-center min-h-screen">
@@ -18,7 +19,7 @@
       </div>
     </div>
   </header>
-  <main class="grid grid-cols-3 w-full flex-1 items-center">
+  <main class="grid grid-cols-[15%_70%_15%] w-full flex-1 items-center">
     <!-- Contenedor -->
     <div class="flex items-center justify-center">
       <div class="text-center bg-white border-3 border-black rounded-3xl p-5 pt-10 shadow-[0_10px_0_0_#000] relative">
@@ -37,19 +38,23 @@
       </div>
     </div>
     <!-- Tablero -->
-    <div class="w-full h-[600px] overflow-hidden rounded-3xl border-[3px] border-black bg-white p-5">
-      <div class="flex flex-col">
-        <!-- Circulos -->
-         <div class="flex items-center justify-between my-3" id="fila1">
-          <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
-          <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
-          <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
-          <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
-          <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
-          <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
+     <div class="w-full flex items-center justify-center">
+       <div class="w-[600px] h-[560px] overflow-hidden rounded-3xl border-[3px] border-black bg-white p-5">
+         <div class="flex flex-col" id="board">
+           <!-- Circulos -->
+            <!--
+            <div class="flex items-center justify-between my-3" id="fila1">
+             <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
+             <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
+             <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
+             <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
+             <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
+             <div class="w-16 h-16 rounded-full bg-[#7A45FF] border-3 shadow-[0_-5px_0_2px_#000]"></div>
+            </div>
+            -->
          </div>
-      </div>
-    </div>
+       </div>
+     </div>
   </main>
 </body>
 </html>
