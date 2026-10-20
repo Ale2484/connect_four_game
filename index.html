@@ -10,21 +10,44 @@
 </head>
 <body class="bg-[#7A45FF] flex flex-col items-center min-h-screen relative">
   <header class="w-full p-10">
-    <div class="grid grid-cols-3">
-      <div class="flex justify-center">
-        <button class="bg-[#5D2CD7] text-white font-semibold px-5 py-1 rounded-xl">Menu</button>
-      </div>
-      <button>&nbsp;</button>
-      <div class="flex justify-center">
-        <button class="bg-[#5D2CD7] text-white font-semibold px-5 py-1 rounded-xl">Restart</button>
-      </div>
+    <div class="flex justify-center">
+        <button id="restart-game" class="bg-[#5D2CD7] text-white font-semibold px-5 py-1 rounded-xl">Restart</button>
     </div>
   </header>
   <!-- Modal iniciar juego -->
-  <div class="w-screen h-screen flex items-center justify-center absolute bg-[#5D2CD7] hidden z-10" id="start-modal">
-    <div class="text-center bg-white text-black rounded-lg p-10 border-black border-4">
-      <p class="font-semibold text-4xl">El juego comienza en:</p>
-      <p class="font-black text-6xl" id="start-time">3</p>
+  <div class="winner-modal start-modal hidden" id="start-modal" role="dialog" aria-modal="true" aria-labelledby="start-title">
+    <div class="winner-card start-card">
+      <div class="start-mascots" aria-hidden="true">
+        <div class="winner-mascot start-mascot-red">
+          <span class="winner-eye winner-eye-left"></span>
+          <span class="winner-eye winner-eye-right"></span>
+          <span class="winner-smile"></span>
+        </div>
+        <div class="winner-mascot start-mascot-yellow">
+          <span class="winner-eye winner-eye-left"></span>
+          <span class="winner-eye winner-eye-right"></span>
+          <span class="winner-smile"></span>
+        </div>
+      </div>
+      <p class="winner-label">¡Cuatro en línea!</p>
+      <p id="start-title" class="winner-name">¿Preparados?</p>
+      <p class="winner-caption">El juego comienza en</p>
+      <p id="start-time" class="start-countdown">3</p>
+    </div>
+  </div>
+  <div id="winner-modal" class="winner-modal hidden" role="dialog" aria-modal="true" aria-labelledby="winner-name">
+    <div class="winner-card">
+      <div class="winner-mascot" aria-hidden="true">
+        <span class="winner-eye winner-eye-left"></span>
+        <span class="winner-eye winner-eye-right"></span>
+        <span class="winner-smile"></span>
+      </div>
+      <p class="winner-label">¡Cuatro en línea!</p>
+      <p id="winner-name" class="winner-name"></p>
+      <p class="winner-caption">Una jugada para celebrar.</p>
+      <span class="winner-point">+1 punto</span>
+      <button id="close-winner" class="winner-button">Ver el tablero</button>
+      <button id="next-round" class="winner-button winner-next-round">Otra ronda</button>
     </div>
   </div>
   <main class="grid grid-cols-[20%_60%_20%] w-full flex-1 items-center p-10">
@@ -42,14 +65,21 @@
           </div>
          </div>
         <h3 class="text-3xl uppercase">Player 1</h3>
-        <p class="text-6xl font-bold">0</p>
+        <p id="score-1" class="text-6xl font-bold">0</p>
       </div>
     </div>
     <!-- Tablero -->
-     <div class="w-full flex items-center justify-center">
+     <div class="w-full flex flex-col items-center justify-center">
        <div class="w-[600px] h-[560px] overflow-hidden rounded-3xl border-[3px] border-black bg-white p-5">
          <div class="flex flex-col" id="board">
          </div>
+       </div>
+       <div id="turn-card" class="turn-card" role="status" aria-live="polite">
+         <svg class="turn-card-shape" viewBox="0 0 220 120" aria-hidden="true">
+           <path d="M 14 33 L 102 5 Q 110 2 118 5 L 206 33 Q 216 36 216 47 V 100 Q 216 114 202 114 H 18 Q 4 114 4 100 V 47 Q 4 36 14 33 Z" />
+         </svg>
+         <span>Turno de</span>
+         <strong id="turn-player">Rojo</strong>
        </div>
      </div>
     <!-- Contenedor -->
@@ -66,7 +96,7 @@
           </div>
          </div>
         <h3 class="text-3xl uppercase">Player 2</h3>
-        <p class="text-6xl font-bold">10</p>
+        <p id="score-2" class="text-6xl font-bold">0</p>
       </div>
     </div>
   </main>

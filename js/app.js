@@ -3,9 +3,99 @@ let startModal = document.getElementById("start-modal");
 // 0 = vacio, 1 = rojo, 2 = amarillo
 let cells = Array.from({ length: 6 }, () => Array(7).fill(0));
 let currentPlayer = 1;
+let roundOver = false;
+let winnerTimeout;
+const winnerModal = document.getElementById("winner-modal");
+const scores = [0, 0, 0];
+const turnCard = document.getElementById("turn-card");
+const turnPlayer = document.getElementById("turn-player");
+
+function updateTurnCard() {
+  turnCard.querySelector("span").textContent = "Turno de";
+  turnCard.style.setProperty("--turn-color", currentPlayer === 1 ? "#FF6388" : "#FFD166");
+  turnCard.style.color = currentPlayer === 1 ? "#fff" : "#000";
+  turnPlayer.textContent = currentPlayer === 1 ? "Jugador 1" : "Jugador 2";
+}
+
+updateTurnCard();
 let canPlay = false;
 startGame();
 createBoard();
+
+const columnIndicator = document.createElement("div");
+columnIndicator.className = "column-indicator";
+columnIndicator.hidden = true;
+columnIndicator.setAttribute("aria-hidden", "true");
+columnIndicator.innerHTML = `
+  <svg viewBox="0 0 40 40" width="40" height="40">
+    <path d="M 9 5 H 31 Q 35 5 35 9 V 20 Q 35 23 32 25 L 23 32 Q 20 35 17 32 L 8 25 Q 5 23 5 20 V 9 Q 5 5 9 5 Z"
+      fill="currentColor" stroke="black" stroke-width="4" stroke-linejoin="round" />
+  </svg>`;
+document.body.appendChild(columnIndicator);
+let hoveredCol = null;
+
+function updateColumnIndicator() {
+  if (!canPlay || hoveredCol === null || cells[0][hoveredCol] !== 0) {
+    columnIndicator.hidden = true;
+    return;
+  }
+  const topCell = board.querySelector(`[data-row="0"] [data-col="${hoveredCol}"]`);
+  const rect = topCell.getBoundingClientRect();
+  const frameRect = board.parentElement.getBoundingClientRect();
+  columnIndicator.style.left = `${rect.left + rect.width / 2}px`;
+  columnIndicator.style.top = `${frameRect.top - 6}px`;
+  columnIndicator.style.color = currentPlayer === 1 ? "#FF6388" : "#FFD166";
+  columnIndicator.hidden = false;
+}
+
+board.addEventListener("pointermove", (event) => {
+  const cell = event.target.closest("[data-col]");
+  hoveredCol = cell ? Number(cell.dataset.col) : null;
+  updateColumnIndicator();
+});
+board.addEventListener("pointerleave", () => {
+  hoveredCol = null;
+  updateColumnIndicator();
+});
+window.addEventListener("resize", updateColumnIndicator);
+window.addEventListener("scroll", updateColumnIndicator, true);
+
+function restartRound(resetScores = true) {
+  // Esperar a que termine la cuenta inicial o la ficha en movimiento.
+  if (!canPlay && !roundOver) return;
+  clearTimeout(winnerTimeout);
+  winnerModal.classList.add("hidden");
+  cells = Array.from({ length: 6 }, () => Array(7).fill(0));
+  currentPlayer = 1;
+  roundOver = false;
+  if (resetScores) {
+    for (const player of [1, 2]) {
+      scores[player] = 0;
+      document.getElementById(`score-${player}`).textContent = "0";
+    }
+  }
+  board.innerHTML = "";
+  createBoard();
+  canPlay = false;
+  updateTurnCard();
+  updateColumnIndicator();
+  startGame();
+}
+document.getElementById("restart-game").addEventListener("click", () => restartRound());
+document.getElementById("next-round").addEventListener("click", () => {
+  restartRound(false);
+  document.getElementById("restart-game").focus();
+});
+function closeWinnerModal() {
+  winnerModal.classList.add("hidden");
+  document.getElementById("restart-game").focus();
+}
+document.getElementById("close-winner").addEventListener("click", closeWinnerModal);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !winnerModal.classList.contains("hidden")) {
+    closeWinnerModal();
+  }
+});
 
 board.addEventListener("click", async (event) => {
   if (!canPlay) return;
@@ -24,14 +114,93 @@ board.addEventListener("click", async (event) => {
       `[data-row="${row}"] [data-col="${col}"]`
     );
     canPlay = false;
+    updateColumnIndicator();
     const color = currentPlayer === 1 ? "bg-[#FF6388]" : "bg-[#FFD166]";
     await animateDrop(cell, color);
 
+    const winningCells = findWinningCells(row, col);
+    if (winningCells.length > 0) {
+      roundOver = true;
+      scores[currentPlayer]++;
+      document.getElementById(`score-${currentPlayer}`).textContent = scores[currentPlayer];
+      turnCard.querySelector("span").textContent = "¡Ganador!";
+      showWinningOutline(winningCells, row, col);
+      const winner = currentPlayer;
+      winnerTimeout = setTimeout(() => {
+        const name = document.getElementById("winner-name");
+        name.textContent = `¡Gana el jugador ${winner}!`;
+        winnerModal.style.setProperty("--winner-color", winner === 1 ? "#FF6388" : "#FFD166");
+        winnerModal.querySelector(".winner-mascot").style.transform = winner === 1 ? "rotate(10deg)" : "rotate(-10deg)";
+        winnerModal.classList.remove("hidden");
+        document.getElementById("close-winner").focus();
+      }, 1000);
+      return;
+    }
+    if (cells.every((line) => line.every((value) => value !== 0))) {
+      roundOver = true;
+      turnCard.querySelector("span").textContent = "Fin de la ronda";
+      turnPlayer.textContent = "Empate";
+      return;
+    }
+
     currentPlayer = currentPlayer === 1 ? 2 : 1;
+    updateTurnCard();
     canPlay = true;
+    updateColumnIndicator();
     break;
   }
 });
+
+function showWinningOutline(winningCells, row, col) {
+  const boardRect = board.getBoundingClientRect();
+  // Un contorno continuo por linea, incluso si la jugada completa dos lineas.
+  for (const [dr, dc] of [[0, 1], [1, 0], [1, 1], [1, -1]]) {
+    const line = winningCells.filter(([r, c]) => (r - row) * dc === (c - col) * dr);
+    if (line.length < 4) continue;
+    line.sort((a, b) => a[0] - b[0] || a[1] - b[1]);
+    const rects = [line[0], line[line.length - 1]].map(([r, c]) =>
+      board.querySelector(`[data-row="${r}"] [data-col="${c}"]`).getBoundingClientRect()
+    );
+    const [first, last] = rects;
+    const dx = last.left - first.left;
+    const dy = last.top - first.top;
+    const diameter = first.width - 10;
+    const outline = document.createElement("div");
+    outline.className = "winning-outline";
+    outline.style.color = currentPlayer === 1 ? "#FF6388" : "#FFD166";
+    Object.assign(outline.style, {
+      left: `${first.left - boardRect.left + first.width / 2}px`,
+      top: `${first.top - boardRect.top + first.height / 2}px`,
+      width: `${Math.hypot(dx, dy) + diameter}px`,
+      height: `${diameter}px`,
+      transform: `rotate(${Math.atan2(dy, dx)}rad) translate(${-diameter / 2}px, -50%)`,
+    });
+    board.appendChild(outline);
+  }
+}
+
+function findWinningCells(row, col) {
+  const player = cells[row][col];
+  if (player === 0) return [];
+  const directions = [[0, 1], [1, 0], [1, 1], [1, -1]];
+  const winners = new Map();
+  for (const [dr, dc] of directions) {
+    const line = [[row, col]];
+    for (const sign of [-1, 1]) {
+      let r = row + dr * sign;
+      let c = col + dc * sign;
+      while (r >= 0 && r < 6 && c >= 0 && c < 7 && cells[r][c] === player) {
+        line.push([r, c]);
+        r += dr * sign;
+        c += dc * sign;
+      }
+    }
+    if (line.length >= 4) {
+      for (const position of line) winners.set(position.join(","), position);
+    }
+  }
+  return [...winners.values()];
+}
 
 async function animateDrop(cell, color) {
   const boardRect = board.getBoundingClientRect();
@@ -114,14 +283,17 @@ function createBoard() {
 // Funcion que inicia la cuenta atras
 function startGame(){
   let startTime = startModal.querySelector("#start-time");
-  startModal.classList.remove("hidden");
+  startTime.textContent = "3";
+  startModal.classList.remove("hidden", "start-modal-leaving");
   let timeOutInterval = setInterval(() => {
     startTime.textContent = Number(startTime.textContent) - 1;
 
     if (startTime.textContent == "0") {
       clearInterval(timeOutInterval);
       canPlay = true;
-      startModal.classList.add("opacity-0", "transition-opacity", "duration-1000", "ease-out", "pointer-events-none");
+      updateColumnIndicator();
+      startModal.classList.add("start-modal-leaving");
+      setTimeout(() => startModal.classList.add("hidden"), 500);
     }
   }, 1000);
 }
