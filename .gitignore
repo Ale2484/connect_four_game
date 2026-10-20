@@ -1,0 +1,15 @@
+# Dependencias locales
+node_modules/
+
+# Logs de npm
+npm-debug.log*
+
+# Variables de entorno y credenciales locales
+.env
+.env.*
+!.env.example
+.aws/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db

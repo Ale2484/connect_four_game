@@ -341,3 +341,71 @@
   font-weight: 900;
   line-height: 1;
 }
+
+.game-layout {
+  display: grid;
+  grid-template-columns: minmax(140px, 1fr) minmax(0, 600px) minmax(140px, 1fr);
+  gap: 28px;
+  align-items: center;
+  width: min(100%, 1120px);
+  padding: 24px 24px 40px;
+  margin: auto;
+}
+.score-slot { display: flex; justify-content: center; min-width: 0; }
+.score-card { width: 100%; max-width: 180px; }
+.score-card h3 { font-size: clamp(18px, 2.2vw, 28px); white-space: nowrap; }
+.board-section { display: flex; flex-direction: column; align-items: center; min-width: 0; width: 100%; }
+.board-frame {
+  width: 100%;
+  padding: clamp(8px, 2vw, 20px);
+  border: 3px solid black;
+  border-radius: 24px;
+  background: white;
+  overflow: hidden;
+}
+#board { gap: clamp(10px, 2vw, 24px); }
+#board [data-row] {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: clamp(5px, 1.5vw, 16px);
+  margin: 0;
+}
+#board [data-col] { width: 100%; height: auto; aspect-ratio: 1; min-width: 0; }
+.piece-eye { top: 26%; width: 7%; height: 14%; }
+.piece-eye-left { left: 29%; }
+.piece-eye-right { right: 29%; }
+.piece-mouth { top: 50%; width: 42%; height: 23%; border-width: 2px; }
+
+@media (max-width: 1023px) {
+  body > header { padding: 24px 16px 40px; }
+  .game-layout {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: min(100%, 648px);
+    gap: 54px 20px;
+    padding: 0 24px 32px;
+    margin: 0 auto;
+  }
+  .board-section { grid-column: 1 / -1; grid-row: 1; }
+  .score-slot-one { grid-column: 1; grid-row: 2; }
+  .score-slot-two { grid-column: 2; grid-row: 2; }
+  .score-card { max-width: none; }
+  .score-card > div { right: calc(50% - 28px); }
+  .score-card h3 { font-size: 24px; }
+}
+@media (max-width: 480px) {
+  .game-layout { padding: 0 12px 24px; gap: 48px 14px; }
+  .board-frame { border-radius: 18px; }
+  #board [data-col] { border-width: 2px; box-shadow: 0 -3px 0 1px black; }
+  .turn-card { width: 176px; height: 96px; padding-top: 29px; }
+  .turn-card span { font-size: 11px; }
+  .turn-card strong { font-size: 22px; }
+  .score-card { padding: 28px 8px 12px; border-radius: 20px; }
+  .score-card h3 { font-size: 18px; }
+  .score-card > p { font-size: 40px; }
+  .winner-modal { padding: 64px 18px 24px; overflow-y: auto; }
+  .winner-card { padding-left: 20px; padding-right: 20px; }
+  .winner-name { font-size: 30px; }
+}
+@media (max-height: 600px) {
+  .winner-modal { align-items: flex-start; overflow-y: auto; padding-top: 64px; padding-bottom: 24px; }
+}

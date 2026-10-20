@@ -5,6 +5,7 @@ let cells = Array.from({ length: 6 }, () => Array(7).fill(0));
 let currentPlayer = 1;
 let roundOver = false;
 let winnerTimeout;
+let winningOutlineState = null;
 const winnerModal = document.getElementById("winner-modal");
 const scores = [0, 0, 0];
 const turnCard = document.getElementById("turn-card");
@@ -58,6 +59,9 @@ board.addEventListener("pointerleave", () => {
   updateColumnIndicator();
 });
 window.addEventListener("resize", updateColumnIndicator);
+window.addEventListener("resize", () => {
+  if (winningOutlineState) showWinningOutline(...winningOutlineState);
+});
 window.addEventListener("scroll", updateColumnIndicator, true);
 
 function restartRound(resetScores = true) {
@@ -68,6 +72,7 @@ function restartRound(resetScores = true) {
   cells = Array.from({ length: 6 }, () => Array(7).fill(0));
   currentPlayer = 1;
   roundOver = false;
+  winningOutlineState = null;
   if (resetScores) {
     for (const player of [1, 2]) {
       scores[player] = 0;
@@ -152,6 +157,8 @@ board.addEventListener("click", async (event) => {
 });
 
 function showWinningOutline(winningCells, row, col) {
+  winningOutlineState = [winningCells, row, col];
+  board.querySelectorAll(".winning-outline").forEach((outline) => outline.remove());
   const boardRect = board.getBoundingClientRect();
   // Un contorno continuo por linea, incluso si la jugada completa dos lineas.
   for (const [dr, dc] of [[0, 1], [1, 0], [1, 1], [1, -1]]) {
@@ -164,7 +171,7 @@ function showWinningOutline(winningCells, row, col) {
     const [first, last] = rects;
     const dx = last.left - first.left;
     const dy = last.top - first.top;
-    const diameter = first.width - 10;
+    const diameter = first.width * 0.84;
     const outline = document.createElement("div");
     outline.className = "winning-outline";
     outline.style.color = currentPlayer === 1 ? "#FF6388" : "#FFD166";
@@ -213,7 +220,8 @@ async function animateDrop(cell, color) {
     const rect = slot.getBoundingClientRect();
     const x = rect.left - boardRect.left + rect.width / 2;
     const y = rect.top - boardRect.top + rect.height / 2;
-    const radius = Math.min(rect.width, rect.height) / 2 - 3;
+    const border = parseFloat(getComputedStyle(slot).borderLeftWidth);
+    const radius = Math.min(rect.width, rect.height) / 2 - border;
     return `M ${x - radius} ${y} a ${radius} ${radius} 0 1 0 ${radius * 2} 0 a ${radius} ${radius} 0 1 0 ${-radius * 2} 0 Z`;
   }).join(" ");
   dropLayer.style.clipPath = `path('${holes}')`;
@@ -257,7 +265,7 @@ function createFace(player) {
   const face = document.createElement("div");
   face.className = "piece-face";
   // Roja hacia la derecha; amarilla hacia la izquierda
-  face.style.transform = `translateX(${player === 1 ? 7 : -7}px)`;
+  face.style.transform = `translateX(${player === 1 ? 12 : -12}%)`;
   face.setAttribute("aria-hidden", "true");
   face.innerHTML = `
     <span class="piece-eye piece-eye-left"></span>
