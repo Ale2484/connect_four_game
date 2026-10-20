@@ -1,3 +1,58 @@
+#board {
+  position: relative;
+}
+
+.drop-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.falling-piece {
+  position: absolute;
+  box-sizing: border-box;
+}
+
+#board [data-col] {
+  position: relative;
+}
+
+.piece-face {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.piece-eye {
+  position: absolute;
+  top: 15px;
+  width: 4px;
+  height: 8px;
+  border-radius: 999px;
+  background: black;
+}
+
+.piece-eye-left {
+  left: 17px;
+}
+
+.piece-eye-right {
+  right: 17px;
+}
+
+.piece-mouth {
+  position: absolute;
+  top: 29px;
+  left: 50%;
+  width: 24px;
+  height: 13px;
+  transform: translateX(-50%);
+  border: 3px solid black;
+  border-top: 0;
+  border-radius: 0 0 24px 24px;
+}
+
 #start-time {
   animation: changeNumber 1s ease-in infinite;
 }
