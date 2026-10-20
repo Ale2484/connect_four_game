@@ -5,10 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <script src="js/app.js" defer></script>
+  <link rel="stylesheet" href="css/styles.css">
   <title>Connect 4 game</title>
 </head>
-<body class="bg-[#7A45FF] p-10 flex flex-col items-center min-h-screen">
-  <header class="w-full">
+<body class="bg-[#7A45FF] flex flex-col items-center min-h-screen relative">
+  <header class="w-full p-10">
     <div class="grid grid-cols-3">
       <div class="flex justify-center">
         <button class="bg-[#5D2CD7] text-white font-semibold px-5 py-1 rounded-xl">Menu</button>
@@ -19,9 +20,16 @@
       </div>
     </div>
   </header>
-  <main class="grid grid-cols-[15%_70%_15%] w-full flex-1 items-center">
+  <!-- Modal iniciar juego -->
+  <div class="w-screen h-screen flex items-center justify-center absolute bg-[#5D2CD7] hidden z-10" id="start-modal">
+    <div class="text-center bg-white text-black rounded-lg p-10 border-black border-4">
+      <p class="font-semibold text-4xl">El juego comienza en:</p>
+      <p class="font-black text-6xl" id="start-time">3</p>
+    </div>
+  </div>
+  <main class="grid grid-cols-[20%_60%_20%] w-full flex-1 items-center p-10">
     <!-- Contenedor -->
-    <div class="flex items-center justify-center">
+    <div class="flex items-center justify-end">
       <div class="text-center bg-white border-3 border-black rounded-3xl p-5 pt-10 shadow-[0_10px_0_0_#000] relative">
         <!-- Cara -->
          <div class="w-14 h-14 bg-[#FF6388] rounded-full border-3 shadow-[0_5px_0_0_#000] absolute -top-10 right-1/3">
@@ -55,6 +63,23 @@
          </div>
        </div>
      </div>
+    <!-- Contenedor -->
+    <div class="flex items-center justify-start">
+      <div class="text-center bg-white border-3 border-black rounded-3xl p-5 pt-10 shadow-[0_10px_0_0_#000] relative">
+        <!-- Cara -->
+         <div class="w-14 h-14 bg-[#FFD166] rounded-full border-3 shadow-[0_5px_0_0_#000] absolute -top-10 right-1/3">
+          <!-- Ojos -->
+          <div class="absolute top-4 left-2 w-1 h-2 rounded-full bg-black"></div>
+          <div class="absolute top-4 right-6 w-1 h-2 rounded-full bg-black"></div>
+          <!-- Boca -->
+          <div class="absolute bottom-2 right-5 w-6 h-3 overflow-hidden">
+            <div class="absolute bottom-0 w-6 h-6 rounded-full border-[3px] border-black"></div>
+          </div>
+         </div>
+        <h3 class="text-3xl uppercase">Player 2</h3>
+        <p class="text-6xl font-bold">10</p>
+      </div>
+    </div>
   </main>
 </body>
 </html>

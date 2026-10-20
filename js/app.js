@@ -1,4 +1,6 @@
 let board = document.getElementById("board");
+let startModal = document.getElementById("start-modal");
+startGame();
 createBoard();
 
 // Funcion que crea el tablero
@@ -12,4 +14,19 @@ function createBoard() {
     content += '</div>';
     board.innerHTML = board.innerHTML + content;
   }
+}
+
+// Funcion que inicia la cuenta atras
+function startGame(){
+  let startTime = startModal.querySelector("#start-time");
+  startModal.classList.remove("hidden");
+  let timeOutInterval = setInterval(() => {
+    console.log("a")
+    startTime.textContent = Number(startTime.textContent) - 1;
+
+    if (startTime.textContent == "0") {
+      clearInterval(timeOutInterval);
+      startModal.classList.add("opacity-0", "transition-opacity", "duration-1000", "ease-out", "pointer-events-none");
+    }
+  }, 1000);
 }

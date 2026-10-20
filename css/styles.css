@@ -1,0 +1,17 @@
+#start-time {
+  animation: changeNumber 1s ease-in infinite;
+}
+
+
+
+@keyframes changeNumber {
+  0%, 100% {
+    transform: translateX(0) rotate(0deg);
+  }
+  20%, 60% {
+    transform: translateX(-2px) rotate(-3deg);
+  }
+  40%, 80% {
+    transform: translateX(2px) rotate(3deg);
+  }
+}
