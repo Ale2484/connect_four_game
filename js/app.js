@@ -11,10 +11,10 @@ const turnCard = document.getElementById("turn-card");
 const turnPlayer = document.getElementById("turn-player");
 
 function updateTurnCard() {
-  turnCard.querySelector("span").textContent = "Turno de";
+  turnCard.querySelector("span").textContent = "Your turn";
   turnCard.style.setProperty("--turn-color", currentPlayer === 1 ? "#FF6388" : "#FFD166");
   turnCard.style.color = currentPlayer === 1 ? "#fff" : "#000";
-  turnPlayer.textContent = currentPlayer === 1 ? "Jugador 1" : "Jugador 2";
+  turnPlayer.textContent = currentPlayer === 1 ? "Player 1" : "Player 2";
 }
 
 updateTurnCard();
@@ -123,23 +123,23 @@ board.addEventListener("click", async (event) => {
       roundOver = true;
       scores[currentPlayer]++;
       document.getElementById(`score-${currentPlayer}`).textContent = scores[currentPlayer];
-      turnCard.querySelector("span").textContent = "¡Ganador!";
+      turnCard.querySelector("span").textContent = "Winner!";
       showWinningOutline(winningCells, row, col);
       const winner = currentPlayer;
       winnerTimeout = setTimeout(() => {
         const name = document.getElementById("winner-name");
-        name.textContent = `¡Gana el jugador ${winner}!`;
+        name.textContent = `Player ${winner} wins!`;
         winnerModal.style.setProperty("--winner-color", winner === 1 ? "#FF6388" : "#FFD166");
         winnerModal.querySelector(".winner-mascot").style.transform = winner === 1 ? "rotate(10deg)" : "rotate(-10deg)";
         winnerModal.classList.remove("hidden");
-        document.getElementById("close-winner").focus();
+        winnerModal.querySelector(".winner-card").focus({ preventScroll: true });
       }, 1000);
       return;
     }
     if (cells.every((line) => line.every((value) => value !== 0))) {
       roundOver = true;
-      turnCard.querySelector("span").textContent = "Fin de la ronda";
-      turnPlayer.textContent = "Empate";
+      turnCard.querySelector("span").textContent = "Round over";
+      turnPlayer.textContent = "Draw";
       return;
     }
 

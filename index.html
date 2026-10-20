@@ -11,7 +11,7 @@
 <body class="bg-[#7A45FF] flex flex-col items-center min-h-screen relative">
   <header class="w-full p-10">
     <div class="flex justify-center">
-        <button id="restart-game" class="bg-[#5D2CD7] text-white font-semibold px-5 py-1 rounded-xl">Restart</button>
+        <button id="restart-game" class="restart-button"><span class="restart-icon" aria-hidden="true">↻</span> Restart</button>
     </div>
   </header>
   <!-- Modal iniciar juego -->
@@ -29,25 +29,25 @@
           <span class="winner-smile"></span>
         </div>
       </div>
-      <p class="winner-label">¡Cuatro en línea!</p>
-      <p id="start-title" class="winner-name">¿Preparados?</p>
-      <p class="winner-caption">El juego comienza en</p>
+      <p class="winner-label">Four in a row!</p>
+      <p id="start-title" class="winner-name">Ready?</p>
+      <p class="winner-caption">The game starts in</p>
       <p id="start-time" class="start-countdown">3</p>
     </div>
   </div>
   <div id="winner-modal" class="winner-modal hidden" role="dialog" aria-modal="true" aria-labelledby="winner-name">
-    <div class="winner-card">
+    <div class="winner-card" tabindex="-1">
       <div class="winner-mascot" aria-hidden="true">
         <span class="winner-eye winner-eye-left"></span>
         <span class="winner-eye winner-eye-right"></span>
         <span class="winner-smile"></span>
       </div>
-      <p class="winner-label">¡Cuatro en línea!</p>
+      <p class="winner-label">Four in a row!</p>
       <p id="winner-name" class="winner-name"></p>
-      <p class="winner-caption">Una jugada para celebrar.</p>
-      <span class="winner-point">+1 punto</span>
-      <button id="close-winner" class="winner-button">Ver el tablero</button>
-      <button id="next-round" class="winner-button winner-next-round">Otra ronda</button>
+      <p class="winner-caption">A move worth celebrating.</p>
+      <span class="winner-point">+1 point</span>
+      <button id="close-winner" class="winner-button">View board</button>
+      <button id="next-round" class="winner-button winner-next-round">Next round</button>
     </div>
   </div>
   <main class="grid grid-cols-[20%_60%_20%] w-full flex-1 items-center p-10">
@@ -78,8 +78,8 @@
          <svg class="turn-card-shape" viewBox="0 0 220 120" aria-hidden="true">
            <path d="M 14 33 L 102 5 Q 110 2 118 5 L 206 33 Q 216 36 216 47 V 100 Q 216 114 202 114 H 18 Q 4 114 4 100 V 47 Q 4 36 14 33 Z" />
          </svg>
-         <span>Turno de</span>
-         <strong id="turn-player">Rojo</strong>
+         <span>Your turn</span>
+         <strong id="turn-player">Player 1</strong>
        </div>
      </div>
     <!-- Contenedor -->
